@@ -1,0 +1,21 @@
+.icon-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+  gap: var(--space-2);
+  contain-intrinsic-size: 100px 3830px;
+  contain: content;
+}
+
+.icon {
+  contain-intrinsic-size: 48px 51.2px;
+  content-visibility: auto;
+  color: var(--color-text-2);
+  text-align: center;
+}
+
+.icon > span{
+  display: block;
+  font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

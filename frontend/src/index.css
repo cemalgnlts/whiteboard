@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  color: var(--color-text-1);
+}
+
+button {
+  translate: transform 250ms ease-in;
+}
+
+button:active {
+  transform: scale(0.9);
+}
