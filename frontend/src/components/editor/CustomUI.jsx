@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback } from "react";
 
-import { useEditor, track } from "@tldraw/tldraw";
+import { useEditor, track, useActions } from "@tldraw/tldraw";
 
 import "./styles.css";
 
@@ -18,7 +18,7 @@ const tools = [
   { type: "divider" },
   { type: "arrow", title: "Arrow - a", icon: "line_end_arrow" },
   { type: "geo", title: "Rectangle - r", icon: "rectangle" },
-  { type: "geo", title: "Ellipse - o", icon: "circle" },
+  { type: "ellipse", title: "Ellipse - o", icon: "circle" },
   { type: "line", title: "Line - l", icon: "pen_size_2" }
 ];
 
@@ -37,6 +37,7 @@ function CustomUI() {
   const lastChoices = useRef(null);
 
   useEffect(() => {
+    editor.user.updateUserPreferences({isDarkMode: true})
     if (lastChoices.current === null) {
       lastChoices.current = {
         icon: "help",
@@ -84,7 +85,7 @@ function CustomUI() {
           });
           break;
         case "c":
-          editor.setCurrentTool("geo");
+          editor.setCurrentTool("ellipse");
           break;
         case "l":
           editor.setCurrentTool("line");
@@ -106,8 +107,8 @@ function CustomUI() {
       else editor.setCurrentTool(tool, info);
 
       if (info) {
-        if (tool === "icon") lastChoices.current.icon = tool.name;
-        else if (tool === "emoji") lastChoices.current.emoji = tool.hexcode;
+        if (tool === "icon") lastChoices.current.icon = info.name;
+        else if (tool === "emoji") lastChoices.current.emoji = info.hexcode;
       }
     },
     [editor]
@@ -138,35 +139,6 @@ function CustomUI() {
         onToolSelect={onToolSelect}
         currentToolId={editor.currentToolId}
       />
-
-      {/* <aside className="container right-aside">
-        <div className="right-aside__content">
-          <div className="tab-buttons">
-            <button
-              className="material-symbols-rounded"
-              data-isactive={editor.currentToolId === "icon"}
-              onClick={onToolSelect.bind(null, "icon")}
-            >
-              interests
-            </button>
-            <button
-              className="material-symbols-rounded"
-              data-isactive={editor.currentToolId === "emoji"}
-              onClick={onToolSelect.bind(null, "emoji")}
-            >
-              add_reaction
-            </button>
-          </div>
-          <div className="tab-contents">
-            <section className="emoji" style={{display: editor.currentToolId === "icon" ? "" : "none"}}>
-              <IconSelector onToolSelect={onToolSelect} />
-            </section>
-            <section className="icon" style={{display: editor.currentToolId === "icon" ? "" : "none"}}>
-              <EmojiPicker onToolSelect={onToolSelect} />
-            </section>
-          </div>
-        </div>
-      </aside> */}
     </>
   );
 }

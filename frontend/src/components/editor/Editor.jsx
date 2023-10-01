@@ -9,14 +9,9 @@ const assetUrls = getAssetUrls({
 });
 
 import {
-  IconShapeUtil,
-  IconShapeTool,
-  EmojiShapeUtil,
-  EmojiShapeTool
+  customShapeUtils,
+  customTools
 } from "../../shapes";
-
-const customShapeUtils = [IconShapeUtil, EmojiShapeUtil];
-const customTools = [IconShapeTool, EmojiShapeTool];
 
 export default function Editor() {
   return (
