@@ -8,10 +8,10 @@ import {
 export class EmojiShapeTool extends BaseBoxShapeTool {
 	static id = "emoji";
 	shapeType = "emoji";
-	emojiName = "";
+	hexcode = "";
 
 	onEnter = (info) => {
-		this.emojiName = info.name;
+		this.hexcode = info.hexcode;
 	};
 
 	onExit = () => {
@@ -19,7 +19,7 @@ export class EmojiShapeTool extends BaseBoxShapeTool {
 		this.editor.updateShape({
 			id: shapeId,
 			props: {
-				name: this.emojiName,
+				hexcode: this.hexcode,
 			},
 		});
 	};
@@ -38,14 +38,7 @@ export class EmojiShapeUtil extends BaseBoxShapeUtil {
 	component(shape) {
 		return (
 			<SVGContainer id={shape.id}>
-				<text
-					x="0"
-					y={shape.props.w}
-					fontSize={shape.props.w}
-					fontFamily="Material Symbols Rounded"
-				>
-					{shape.props.name}
-				</text>
+				<image href={`/assets/openmoji/${shape.props.hexcode}.svg`} width={shape.props.w} />
 			</SVGContainer>
 		);
 	}
@@ -54,7 +47,7 @@ export class EmojiShapeUtil extends BaseBoxShapeUtil {
 		return {
 			w: 56,
 			h: 56,
-			name: "help",
+			hexcode: "",
 		};
 	}
 

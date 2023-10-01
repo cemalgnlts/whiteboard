@@ -1,10 +1,8 @@
 import {
 	BaseBoxShapeTool,
-	ShapeUtil,
 	BaseBoxShapeUtil,
 	Box2d,
 	SVGContainer,
-    Rectangle2d,
 } from "@tldraw/tldraw";
 
 export class IconShapeTool extends BaseBoxShapeTool {

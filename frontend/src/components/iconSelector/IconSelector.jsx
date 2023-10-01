@@ -5,7 +5,6 @@ import { FixedSizeGrid as Grid } from "react-window";
 import { groupByCount } from "../../libs/utils";
 import materialSymbolIcons from "../../libs/icons.json";
 
-import "./styles.css";
 import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 
 let icons = [];
@@ -14,10 +13,10 @@ const Cell = memo(({ data, columnIndex, rowIndex, style }) => {
 	const name = icons[rowIndex]?.[columnIndex];
 
 	return name ? (
-		<div className="icon" style={style}>
+		<div className="picker-item" style={style}>
 			<button
 				className="material-symbols-rounded"
-				onClick={data.bind(null, name)}
+				onClick={() => data(name)}
 			>
 				{name}
 			</button>
@@ -26,7 +25,7 @@ const Cell = memo(({ data, columnIndex, rowIndex, style }) => {
 	) : null;
 });
 
-function IconSelector({ onToolSelect }) {
+function IconSelector({ onToolSelect, isActive }) {
 	const inpRef = useRef();
 	const gridRef = useRef();
 	const [debounce] = useDebounceCallback(onKeyDown, 500);
@@ -39,6 +38,10 @@ function IconSelector({ onToolSelect }) {
 	useEffect(() => {
 		updateList(materialSymbolIcons);
 	}, []);
+
+	useEffect(() => {
+		if(isActive) inpRef.current?.focus();
+	}, [isActive]);
 
 	const iconSelected = (name) => {
 		onToolSelect("icon", { name });
@@ -70,7 +73,7 @@ function IconSelector({ onToolSelect }) {
 	};
 
 	return (
-		<div className="icon-wrapper">
+		<div className="picker-wrapper" data-isactive={isActive}>
 			<input
 				className="search-input"
 				placeholder="Search"
@@ -78,7 +81,7 @@ function IconSelector({ onToolSelect }) {
 				ref={inpRef}
 			/>
 			<Grid
-				className="icon-container"
+				className="picker-container"
 				columnCount={colSize}
 				columnWidth={54}
 				rowCount={rowSize}
