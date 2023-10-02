@@ -1,12 +1,15 @@
 import { useRef, useEffect, useCallback } from "react";
 
-import { useEditor, track, useActions } from "@tldraw/tldraw";
+import { useEditor, track } from "@tldraw/tldraw";
 
 import "./styles.css";
 
 import ExtraShapeTabs from "../extraShapeTabs/ExtraShapeTabs";
 import IconSelector from "../iconSelector/IconSelector";
 import EmojiPicker from "../emojiPicker";
+import StylePanel from "./StylePanel";
+import handleKeyboardShortcuts from "./handleKeyboardShortcuts";
+import Customize from "./Customize";
 
 const tools = [
   { type: "select", title: "Select - s", icon: "arrow_selector_tool" },
@@ -37,7 +40,7 @@ function CustomUI() {
   const lastChoices = useRef(null);
 
   useEffect(() => {
-    editor.user.updateUserPreferences({isDarkMode: true})
+    editor.user.updateUserPreferences({ isDarkMode: false });
     if (lastChoices.current === null) {
       lastChoices.current = {
         icon: "help",
@@ -47,58 +50,30 @@ function CustomUI() {
   }, []);
 
   useEffect(() => {
-    const handleKeyUp = (e) => {
-      const activeElTag = document.activeElement.tagName;
+    /** @param {KeyboardEvent} ev */
+    const onKeyUp = (ev) => {
+      ev.preventDefault();
 
-      if (activeElTag === "TEXTAREA" || activeElTag === "INPUT") return;
+      if (!ev.ctrlKey) {
+        handleKeyboardShortcuts(ev, editor, lastChoices.current);
+        return;
+      }
 
-      switch (e.key) {
-        case "s":
-          editor.setCurrentTool("select");
-          break;
-        case "h":
-          editor.setCurrentTool("hand");
-          break;
-        case "p":
-          editor.setCurrentTool("draw");
-          break;
-        case "t":
-          editor.setCurrentTool("text");
-          break;
-        case "e":
-          editor.setCurrentTool("eraser");
-          break;
+      switch (ev.key) {
         case "a":
-          editor.setCurrentTool("arrow");
+          editor.selectAll();
           break;
-        case "r":
-          editor.setCurrentTool("geo");
+        case "z":
+          editor.undo();
           break;
-        case "i":
-          editor.setCurrentTool("icon", {
-            name: lastChoices.current.icon
-          });
-          break;
-        case "o":
-          editor.setCurrentTool("emoji", {
-            hexcode: lastChoices.current.emoji
-          });
-          break;
-        case "c":
-          editor.setCurrentTool("ellipse");
-          break;
-        case "l":
-          editor.setCurrentTool("line");
-          break;
-        case "Delete":
-        case "Backspace":
-          editor.deleteShapes(editor.selectedShapeIds);
+        case "y":
+          editor.redo();
           break;
       }
     };
 
-    document.addEventListener("keyup", handleKeyUp);
-    return () => document.removeEventListener("keyup", handleKeyUp);
+    document.addEventListener("keyup", onKeyUp);
+    return () => document.removeEventListener("keyup", onKeyUp);
   }, [editor]);
 
   const onToolSelect = useCallback(
@@ -139,6 +114,10 @@ function CustomUI() {
         onToolSelect={onToolSelect}
         currentToolId={editor.currentToolId}
       />
+
+      <StylePanel editor={editor} />
+
+      <Customize />
     </>
   );
 }

@@ -7,7 +7,8 @@
   box-shadow: var(--shadow-1);
 }
 
-.container button {
+.container button,
+.container .btn {
   font-size: 1.2rem;
   width: 36px;
   height: 36px;
@@ -18,11 +19,20 @@
   cursor: pointer;
 }
 
-.container button:hover {
-  background-color: var(--color-text-3);
+.container button.small,
+.container .btn.small {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-2);
 }
 
-.container button[data-isactive="true"] {
+.container button:hover,
+.container .btn:hover {
+  background-color: var(--color-hint);
+}
+
+.container button[data-isactive="true"],
+.container .btn[data-isactive="true"] {
   background-color: var(--color-selected);
   color: var(--color-selected-contrast);
 }

@@ -25,23 +25,39 @@
   -webkit-font-smoothing: antialiased;
 }
 
+.tl-theme__light {
+  --color-hint: rgb(0 0 0 / 15%);
+}
+
 html,
 body,
 #root {
   height: 100%;
 }
 
+h1,
+h2 {
+  margin: 0;
+}
+
+h2 {
+  font-size: 0.75rem;
+  font-weight: normal;
+}
+
 body {
   margin: 0;
   font-family: Inter, sans-serif;
-  color: var(--color-text-1);
+  color: var(--color-text);
 }
 
-button {
+button,
+.btn {
   translate: transform 250ms ease-in;
 }
 
-button:active {
+button:active,
+.btn:active {
   transform: scale(0.9);
 }
 
@@ -53,7 +69,7 @@ button:active {
 }
 
 .picker-wrapper:not([data-isactive="true"]) {
-	display: none;
+  display: none;
 }
 
 .picker-container {
@@ -108,4 +124,125 @@ button:active {
   outline: solid 2px var(--color-focus);
   outline-offset: 2px;
 }
+/* #endregion */
+
+/* #region StylePanel */
+.style-panel {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  color: var(--color-text-1);
+}
+
+.style-panel__toggler {
+  display: none;
+  margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  .style-panel__toggler:not([data-isactive="true"]) + .style-panel__content {
+    display: none;
+  }
+
+  .style-panel__toggler {
+    display: block;
+  }
+}
+
+.style-panel section + section {
+  margin-top: var(--space-4);
+}
+
+.style-panel button[data-isactive="true"] {
+  background-color: var(--color-hint);
+  color: inherit;
+}
+
+.style-panel__content {
+  padding: var(--space-1);
+}
+
+.style-panel__content section > h2 {
+  margin-bottom: var(--space-2);
+}
+
+.style-panel__section__fill-style button > img {
+  width: 18px;
+  height: 18px;
+}
+
+.color-palette {
+  display: flex;
+  margin-bottom: var(--space-2);
+  justify-content: space-between;
+}
+
+.color-palette__color {
+  --size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-palette__color::after {
+  content: "";
+  display: block;
+  width: var(--size);
+  height: var(--size);
+  background-color: currentColor;
+  border-radius: var(--radius-1);
+  flex: 0 0 var(--size);
+}
+
+.style-panel__content .react-colorful__saturation {
+  border-top-left-radius: var(--radius-3);
+  border-top-right-radius: var(--radius-3);
+}
+
+.style-panel__content .react-colorful__alpha {
+  border-bottom-left-radius: var(--radius-3);
+  border-bottom-right-radius: var(--radius-3);
+}
+
+.style-panel__content .react-colorful__saturation-pointer,
+.style-panel__content .react-colorful__hue-pointer,
+.style-panel__content .react-colorful__alpha-pointer {
+  width: 20px;
+  height: 20px;
+  border-width: 1px;
+  border-color: #fff;
+}
+
+.equal-size {
+  display: flex;
+  justify-content: space-between;
+}
+/* #endregion */
+
+/* #region Customize */
+.customize {
+  left: 1em;
+  bottom: 2em;
+  display: flex;
+  align-items: center;
+}
+
+.customize__content {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-left: var(--space-4);
+}
+
+.customize__content .material-symbols-rounded {
+  vertical-align: middle;
+  margin-right: var(--space-1);
+  font-size: 1.2rem;
+}
+
+.customize__content > .btn {
+  width: 100%;
+  padding: 0 1em;
+}
+
 /* #endregion */
