@@ -8,19 +8,39 @@ import {
   DefaultColorThemePalette,
   DefaultDashStyle,
   DefaultFillStyle,
+  DefaultFontFamilies,
+  DefaultFontStyle,
   DefaultSizeStyle,
   Editor
 } from "@tldraw/tldraw";
 
 import { colord } from "colord";
 
+import FillNoneIcon from "../../assets/icons/FillNoneIcon";
+import FillPatternIcon from "../../assets/icons/FillPatternIcon";
+import FillSemiIcon from "../../assets/icons/FillSemiIcon";
+import FillSolidIcon from "../../assets/icons/FillSolidIcon";
+
 const paletteColorNames = ["red", "green", "blue", "orange", "violet"];
 
-const borderSizeValues = ["s", "m", "l", "xl"];
+const shapeSizeValues = ["s", "m", "l", "xl"];
 const borderStyleValues = ["solid", "dashed", "dotted", "draw"];
 const fillStyleValues = ["none", "solid", "semi", "pattern"];
+const fontStyleValues = ["draw", "mono", "sans", "serif"];
 
-const borderStyleIcons = ["crop_square", "select", "select", "crop_square"];
+const borderStyleIcons = [
+  "horizontal_rule",
+  "unknown_med",
+  "more_horiz",
+  "line_curve"
+];
+
+const fillStyleIcons = [
+  FillNoneIcon,
+  FillSolidIcon,
+  FillSemiIcon,
+  FillPatternIcon
+];
 
 /**
  *
@@ -31,9 +51,10 @@ const borderStyleIcons = ["crop_square", "select", "select", "crop_square"];
 function StylePanel({ editor }) {
   const [colors, setColors] = useState(materialColors);
   const [activeColor, setActiveColor] = useState(undefined);
-  const [borderSize, setBorderSize] = useState("s");
-  const [borderStyle, setBorderStyle] = useState("solid");
-  const [fillStyle, setFillStyle] = useState("none");
+  const [shapeSize, setShapeSize] = useState(shapeSizeValues[0]);
+  const [borderStyle, setBorderStyle] = useState(borderStyleValues[0]);
+  const [fillStyle, setFillStyle] = useState(fillStyleValues[0]);
+  const [fontStyle, setFontStyle] = useState("sans");
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -49,43 +70,28 @@ function StylePanel({ editor }) {
 
     upateDefaultPalette();
 
-    if (editor.isIn("select"))
-      editor.setStyleForSelectedShapes(DefaultColorStyle, colorName);
-
-    editor.setStyleForNextShapes(DefaultColorStyle, colorName);
-
-    blinkStyle();
+    applyStyle(DefaultColorStyle, colorName);
   }, [activeColor]);
 
-  // Border size
-  useEffect(() => {
-    if (editor.isIn("select"))
-      editor.setStyleForSelectedShapes(DefaultSizeStyle, borderSize);
-
-    editor.setStyleForNextShapes(DefaultSizeStyle, borderSize);
-
-    blinkStyle();
-  }, [borderSize]);
+  // Size
+  useEffect(() => applyStyle(DefaultSizeStyle, shapeSize), [shapeSize]);
 
   // Border style
-  useEffect(() => {
-    if (editor.isIn("select"))
-      editor.setStyleForSelectedShapes(DefaultDashStyle, borderStyle);
-
-    editor.setStyleForNextShapes(DefaultDashStyle, borderStyle);
-
-    blinkStyle();
-  }, [borderStyle]);
+  useEffect(() => applyStyle(DefaultDashStyle, borderStyle), [borderStyle]);
 
   // Fill style
-  useEffect(() => {
-    if (editor.isIn("select"))
-      editor.setStyleForSelectedShapes(DefaultFillStyle, fillStyle);
+  useEffect(() => applyStyle(DefaultFillStyle, fillStyle), [fillStyle]);
 
-    editor.setStyleForNextShapes(DefaultFillStyle, fillStyle);
+  // Font style
+  useEffect(() => applyStyle(DefaultFontStyle, fontStyle), [fontStyle]);
+
+  const applyStyle = (style, value) => {
+    if (editor.isIn("select")) editor.setStyleForSelectedShapes(style, value);
+
+    editor.setStyleForNextShapes(style, value);
 
     blinkStyle();
-  }, [fillStyle]);
+  };
 
   const blinkStyle = () => {
     const selectedIds = editor.selectedShapeIds;
@@ -107,6 +113,7 @@ function StylePanel({ editor }) {
   };
 
   const upateDefaultPalette = () => {
+    DefaultFontFamilies.sans = "'sans-serif', monospace";
     for (let i = 0; i < paletteColorNames.length; i++) {
       const name = paletteColorNames[i];
       const color = colors[i];
@@ -125,9 +132,9 @@ function StylePanel({ editor }) {
     }
   };
 
-  const updateBorderSize = (ev) => {
+  const updateShapeSize = (ev) => {
     const size = ev.currentTarget.dataset.size;
-    setBorderSize(size);
+    setShapeSize(size);
   };
 
   const updateBorderStyle = (ev) => {
@@ -140,9 +147,12 @@ function StylePanel({ editor }) {
     setFillStyle(style);
   };
 
-  const toggleStylePanel = (ev) => {
-    setIsOpen(!isOpen);
+  const updateFontStyle = (ev) => {
+    const style = ev.currentTarget.dataset.style;
+    setFontStyle(style);
   };
+
+  const toggleStylePanel = () => setIsOpen(!isOpen);
 
   return (
     <div className="container style-panel">
@@ -175,14 +185,14 @@ function StylePanel({ editor }) {
         </section>
 
         <section>
-          <h2>Border Width</h2>
+          <h2>Shape size</h2>
           <div className="style-panel__section__content equal-size">
-            {borderSizeValues.map((val, idx) => (
+            {shapeSizeValues.map((val, idx) => (
               <button
                 key={val}
                 className="material-symbols-rounded"
-                onClick={updateBorderSize}
-                data-isactive={val === borderSize}
+                onClick={updateShapeSize}
+                data-isactive={val === shapeSize}
                 data-size={val}
                 title={val}
               >
@@ -193,7 +203,7 @@ function StylePanel({ editor }) {
         </section>
 
         <section>
-          <h2>Border Style</h2>
+          <h2>Border style</h2>
           <div className="style-panel__section__content equal-size">
             {borderStyleValues.map((val, idx) => (
               <button
@@ -210,19 +220,44 @@ function StylePanel({ editor }) {
           </div>
         </section>
 
-        <section className="style-panel__section__fill-style">
-          <h2>Fill Style</h2>
+        <section>
+          <h2>Fill style</h2>
           <div className="style-panel__section__content equal-size">
             {fillStyleValues.map((val, idx) => (
               <button
                 key={val}
-                className="material-symbols-rounded"
                 onClick={updateFillStyle}
                 data-isactive={val === fillStyle}
                 data-style={val}
                 title={val}
               >
-                <img src={`/assets/icons/fill-${val}.svg`} />
+                {fillStyleIcons[idx]()}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2>Font style</h2>
+          <div className="style-panel__section__content equal-size">
+            {fontStyleValues.map((val) => (
+              <button
+                key={val}
+                onClick={updateFontStyle}
+                data-isactive={val === fontStyle}
+                data-style={val}
+                title={val}
+              >
+                <svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
+                  <text
+                    fill="currentColor"
+                    fontSize="21"
+                    y="20"
+                    fontFamily={`tldraw_${val}, sans-serif`}
+                  >
+                    Aa
+                  </text>
+                </svg>
               </button>
             ))}
           </div>

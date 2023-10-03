@@ -2,7 +2,10 @@ import {
   BaseBoxShapeTool,
   BaseBoxShapeUtil,
   Box2d,
-  SVGContainer
+  DefaultColorStyle,
+  SVGContainer,
+  T,
+  getDefaultColorTheme
 } from "@tldraw/tldraw";
 
 export class IconShapeTool extends BaseBoxShapeTool {
@@ -30,7 +33,13 @@ export class IconShapeTool extends BaseBoxShapeTool {
 export class IconShapeUtil extends BaseBoxShapeUtil {
   static type = "icon";
 
-  canResize = () => true;
+  static props = {
+    w: T.number,
+    h: T.number,
+    name: T.string,
+    color: DefaultColorStyle
+  };
+
   isAspectRatioLocked = () => true;
 
   /**
@@ -38,6 +47,11 @@ export class IconShapeUtil extends BaseBoxShapeUtil {
    * @param {IconShapeUtil} shape
    */
   component(shape) {
+    const theme = getDefaultColorTheme({
+      isDarkMode: this.editor.user.isDarkMode
+    });
+    const color = theme[shape.props.color].solid;
+
     return (
       <SVGContainer id={shape.id}>
         <text
@@ -45,9 +59,7 @@ export class IconShapeUtil extends BaseBoxShapeUtil {
           y={shape.props.w}
           fontSize={shape.props.w}
           fontFamily="Material Symbols Rounded"
-          style={{
-            fill: "var(--color-text)"
-          }}
+          fill={color}
         >
           {shape.props.name}
         </text>
@@ -59,7 +71,8 @@ export class IconShapeUtil extends BaseBoxShapeUtil {
     return {
       w: 56,
       h: 56,
-      name: "help"
+      name: "help",
+      color: "black"
     };
   }
 

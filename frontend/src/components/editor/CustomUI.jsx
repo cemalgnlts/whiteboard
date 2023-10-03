@@ -9,7 +9,7 @@ import IconSelector from "../iconSelector/IconSelector";
 import EmojiPicker from "../emojiPicker";
 import StylePanel from "./StylePanel";
 import handleKeyboardShortcuts from "./handleKeyboardShortcuts";
-import Customize from "./Customize";
+import UserPrefsMenu from "./UserPrefsMenu";
 
 const tools = [
   { type: "select", title: "Select - s", icon: "arrow_selector_tool" },
@@ -32,6 +32,12 @@ const extraTools = [
     title: "Openmoji - o",
     icon: "add_reaction",
     picker: EmojiPicker
+  },
+  {
+    type: "codeblock",
+    title: "Code",
+    icon: "code",
+    picker: null
   }
 ];
 
@@ -40,13 +46,17 @@ function CustomUI() {
   const lastChoices = useRef(null);
 
   useEffect(() => {
-    editor.user.updateUserPreferences({ isDarkMode: false });
     if (lastChoices.current === null) {
       lastChoices.current = {
         icon: "help",
         emoji: "1F607"
       };
     }
+
+    editor.updateViewportScreenBounds(true);
+    editor.zoomToFit();
+
+    if (editor.zoomLevel > 1) editor.resetZoom();
   }, []);
 
   useEffect(() => {
@@ -117,7 +127,7 @@ function CustomUI() {
 
       <StylePanel editor={editor} />
 
-      <Customize />
+      <UserPrefsMenu editor={editor} />
     </>
   );
 }

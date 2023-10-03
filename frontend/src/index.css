@@ -51,15 +51,69 @@ body {
   color: var(--color-text);
 }
 
-button,
-.btn {
-  translate: transform 250ms ease-in;
-}
+/* #region Global */
+/* button {
+  transition: transform 100ms ease-out;
+} */
 
-button:active,
-.btn:active {
+button:active {
   transform: scale(0.9);
 }
+
+.code-block {
+  width: 100%;
+  height: 100%;
+  font-family: tldraw_mono, monospace;
+  padding: var(--space-4);
+  border-radius: var(--radius-1);
+  white-space: pre;
+  overflow: hidden;
+  tab-size: 2;
+}
+
+/* Select list */
+.select-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-left: var(--space-4);
+}
+
+.select-list > li {
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  padding: var(--space-4);
+  cursor: pointer;
+  color: var(--color-text);
+  /* transition: background-color 250ms ease-in; */
+}
+
+.select-list > li:first-child {
+  border-top-left-radius: var(--radius-2);
+  border-top-right-radius: var(--radius-2);
+}
+
+.select-list > li:last-child {
+  border-bottom-left-radius: var(--radius-2);
+  border-bottom-right-radius: var(--radius-2);
+}
+
+.select-list > li:hover,
+.select-list > li:focus-visible {
+  background-color: var(--color-hint);
+}
+
+.select-list > li:active {
+  background-color: var(--color-selected);
+  color: var(--color-selected-contrast);
+}
+
+.select-list > li > .material-symbols-rounded {
+  margin-right: var(--space-3);
+  font-size: 1rem;
+}
+/* #endregion */
 
 /* #region Picker */
 .picker-wrapper {
@@ -166,9 +220,10 @@ button:active,
   margin-bottom: var(--space-2);
 }
 
-.style-panel__section__fill-style button > img {
+.style-panel__section__content button > svg {
   width: 18px;
   height: 18px;
+  vertical-align: middle;
 }
 
 .color-palette {
@@ -219,30 +274,27 @@ button:active,
 }
 /* #endregion */
 
-/* #region Customize */
-.customize {
+/* #region UserPrefsMenu */
+.user-prefs {
+  position: absolute;
   left: 1em;
   bottom: 2em;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 
-.customize__content {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  margin-left: var(--space-4);
+@media (max-width: 474px) {
+  .user-prefs {
+    bottom: 6em;
+  }
 }
 
-.customize__content .material-symbols-rounded {
-  vertical-align: middle;
-  margin-right: var(--space-1);
-  font-size: 1.2rem;
+.user-prefs:not(.open) .user-prefs__content {
+  display: none;
 }
 
-.customize__content > .btn {
-  width: 100%;
-  padding: 0 1em;
+.user-prefs > .container {
+  position: unset;
 }
 
 /* #endregion */

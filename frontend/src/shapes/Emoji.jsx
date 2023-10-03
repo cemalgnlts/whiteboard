@@ -17,7 +17,7 @@ export class EmojiShapeTool extends BaseBoxShapeTool {
   onExit = () => {
     const shapeId = this.editor.selectedShapeIds[0];
     if (!shapeId) return;
-	
+
     this.editor.updateShape({
       id: shapeId,
       props: {
@@ -30,7 +30,6 @@ export class EmojiShapeTool extends BaseBoxShapeTool {
 export class EmojiShapeUtil extends BaseBoxShapeUtil {
   static type = "emoji";
 
-  canResize = () => true;
   isAspectRatioLocked = () => true;
 
   /**
@@ -43,6 +42,7 @@ export class EmojiShapeUtil extends BaseBoxShapeUtil {
         <image
           href={`/assets/openmoji/${shape.props.hexcode}.svg`}
           width={shape.props.w}
+          height={shape.props.h}
         />
       </SVGContainer>
     );
@@ -52,7 +52,7 @@ export class EmojiShapeUtil extends BaseBoxShapeUtil {
     return {
       w: 56,
       h: 56,
-      hexcode: ""
+      hexcode: "1F607"
     };
   }
 

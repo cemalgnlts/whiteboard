@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ExtraShapeTabButton } from "./ExtraShapeTabButton";
 
 /**
@@ -11,7 +11,10 @@ function ExtraShapeTabs({ tabs, currentToolId, onToolSelect }) {
   const [isAnyActive, setIsAnyActive] = useState(false);
 
   useEffect(() => {
-    const anySelected = tabs.some((tab) => tab.type === currentToolId);
+    const anySelected = tabs.some(
+      (tab) => tab.type === currentToolId && tab.picker !== null
+    );
+    
     setIsAnyActive(anySelected);
   }, [currentToolId]);
 
@@ -35,13 +38,15 @@ function ExtraShapeTabs({ tabs, currentToolId, onToolSelect }) {
           ))}
         </div>
         <div className="tab-contents" data-isactive={isAnyActive}>
-          {tabs.map(({ picker: Picker, type }) => (
-            <Picker
-              key={type}
-              onToolSelect={onSelect}
-              isActive={currentToolId === type}
-            />
-          ))}
+          {tabs.map(({ picker: Picker, type }) =>
+            Picker ? (
+              <Picker
+                key={type}
+                onToolSelect={onSelect}
+                isActive={currentToolId === type}
+              />
+            ) : null
+          )}
         </div>
       </div>
     </aside>
