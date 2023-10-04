@@ -1,37 +1,10 @@
 .container {
   position: absolute;
-  z-index: 300;
+  z-index: var(--layer-panels);
   padding: var(--space-2);
   background-color: var(--color-panel);
   border-radius: var(--radius-2);
   box-shadow: var(--shadow-1);
-}
-
-.container button {
-  font-size: 1.2rem;
-  width: 36px;
-  height: 36px;
-  background-color: transparent;
-  border: none;
-  color: var(--color-text-1);
-  border-radius: var(--radius-3);
-  cursor: pointer;
-}
-
-.container button.small {
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-2);
-}
-
-.container button:hover,
-.container button:focus-visible {
-  background-color: var(--color-hint);
-}
-
-.container button[data-isactive="true"] {
-  background-color: var(--color-selected);
-  color: var(--color-selected-contrast);
 }
 
 .toolbar {
@@ -48,8 +21,8 @@
   }
 
   .toolbar > button {
-    width: 30px;
-    height: 30px;
+    width: 30px !important;
+    height: 30px !important;
   }
 }
 
@@ -80,7 +53,8 @@
   margin-top: var(--space-1);
 }
 
-.tab-buttons, .tab-contents {
+.tab-buttons,
+.tab-contents {
   padding: var(--space-2);
   background-color: var(--color-panel);
   border-radius: var(--radius-2);

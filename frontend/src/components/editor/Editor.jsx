@@ -1,6 +1,5 @@
 import { Tldraw } from "@tldraw/tldraw";
 import { getAssetUrls } from "@tldraw/assets/selfHosted";
-import "@tldraw/tldraw/tldraw.css";
 
 import CustomUI from "./CustomUI";
 

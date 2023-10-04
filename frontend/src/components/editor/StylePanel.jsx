@@ -10,8 +10,7 @@ import {
   DefaultFillStyle,
   DefaultFontFamilies,
   DefaultFontStyle,
-  DefaultSizeStyle,
-  Editor
+  DefaultSizeStyle
 } from "@tldraw/tldraw";
 
 import { colord } from "colord";
@@ -45,7 +44,7 @@ const fillStyleIcons = [
 /**
  *
  * @param {Object} param0
- * @param {Editor} param0.editor
+ * @param {import("@tldraw/tldraw").Editor} param0.editor
  * @returns
  */
 function StylePanel({ editor }) {
@@ -190,7 +189,7 @@ function StylePanel({ editor }) {
             {shapeSizeValues.map((val, idx) => (
               <button
                 key={val}
-                className="material-symbols-rounded"
+                className="material-symbols-rounded small"
                 onClick={updateShapeSize}
                 data-isactive={val === shapeSize}
                 data-size={val}
@@ -208,7 +207,7 @@ function StylePanel({ editor }) {
             {borderStyleValues.map((val, idx) => (
               <button
                 key={val}
-                className="material-symbols-rounded"
+                className="material-symbols-rounded small"
                 onClick={updateBorderStyle}
                 data-isactive={val === borderStyle}
                 data-style={val}
@@ -225,6 +224,7 @@ function StylePanel({ editor }) {
           <div className="style-panel__section__content equal-size">
             {fillStyleValues.map((val, idx) => (
               <button
+                className="small"
                 key={val}
                 onClick={updateFillStyle}
                 data-isactive={val === fillStyle}
@@ -243,6 +243,7 @@ function StylePanel({ editor }) {
             {fontStyleValues.map((val) => (
               <button
                 key={val}
+                className="small"
                 onClick={updateFontStyle}
                 data-isactive={val === fontStyle}
                 data-style={val}

@@ -1,11 +1,9 @@
 import { useState } from "react";
 
-import { Editor } from "@tldraw/tldraw";
-
 /**
  *
  * @param {Object} param0
- * @param {Editor} param0.editor
+ * @param {import("@tldraw/tldraw").Editor} param0.editor
  */
 function UserPrefsMenu({ editor }) {
   const [isOpen, setIsOpen] = useState(false);

@@ -7,19 +7,12 @@ import {
   DefaultSizeStyle
 } from "@tldraw/tldraw";
 
-import hljs from "highlight.js";
+import hljs from "../assets/highlightjs/highlight.js";
+import { useEffect, useState } from "react";
 
 export class CodeBlockShapeTool extends BaseBoxShapeTool {
   static id = "codeblock";
   shapeType = "codeblock";
-
-  onEnter = (info = {}) => {};
-
-  onKeyDown = () => {
-    alert(1);
-  }
-
-  onExit = () => {};
 }
 
 export class CodeBlockShapeUtil extends BaseBoxShapeUtil {
@@ -46,8 +39,14 @@ export class CodeBlockShapeUtil extends BaseBoxShapeUtil {
    */
   component(shape) {
     const isDarkMode = this.editor.user.isDarkMode;
-
+    const isSelected = this.editor.onlySelectedShape?.id === shape.id;
     let fontSize = 0.75;
+
+    const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+
+    useEffect(() => {
+      if (!isSelected) setIsLangMenuOpen(false);
+    }, [isSelected]);
 
     switch (shape.props.fontSize) {
       case "m":
@@ -62,10 +61,29 @@ export class CodeBlockShapeUtil extends BaseBoxShapeUtil {
     }
 
     const onBlur = (ev) => {
+      setIsLangMenuOpen(false);
       this.completeEdit(shape, ev.currentTarget.value);
     };
 
-    const preventDefault = (ev) => {
+    const onPointerDown = (ev) => {
+      ev.stopPropagation();
+    };
+
+    const toggleLangMenu = () => {
+      setIsLangMenuOpen(!isLangMenuOpen);
+    };
+
+    const updateCodeLanguage = (ev) => {
+      const language = ev.target.innerText.toLowerCase();
+      setIsLangMenuOpen(false);
+
+      this.editor.updateShape({
+        id: shape.id,
+        props: { language }
+      });
+    };
+
+    const textAreaOnKeDown = (ev) => {
       /** @type {HTMLTextAreaElement} */
       const textArea = ev.currentTarget;
 
@@ -73,13 +91,22 @@ export class CodeBlockShapeUtil extends BaseBoxShapeUtil {
         ev.preventDefault();
         textArea.setRangeText("\t");
         textArea.selectionStart = textArea.selectionStart + 1;
+
+        return;
       }
 
-      if (ev.ctrlKey && ev.key === "Enter") textArea.blur();
+      const isCtrl = ev.ctrlKey || ev.shiftKey || ev.metaKey;
+      if (isCtrl && ev.key === "Enter") textArea.blur();
     };
 
     return (
-      <HTMLContainer id={shape.id} className="pointer-events-tldraw">
+      <HTMLContainer
+        id={shape.id}
+        style={{
+          width: shape.props.w,
+          height: shape.props.h
+        }}
+      >
         {!shape.props.isEditing ? (
           <code
             dangerouslySetInnerHTML={{
@@ -96,13 +123,48 @@ export class CodeBlockShapeUtil extends BaseBoxShapeUtil {
         ) : (
           <textarea
             data-theme={isDarkMode ? "dark" : "light"}
-            className="code-block hljs"
-            tabIndex={0}
+            className="code-block hljs tl-text tl-text-input"
+            tabIndex={-1}
             onBlur={onBlur}
-            onKeyDown={preventDefault}
+            onKeyDown={textAreaOnKeDown}
             defaultValue={shape.props.text}
+            autoComplete="off"
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
             autoFocus
           ></textarea>
+        )}
+
+        {isSelected && (
+          <div
+            className="container shape-customize-wrapper"
+            onPointerDown={onPointerDown}
+          >
+            <div className="select">
+              <button
+                className="material-symbols-rounded"
+                data-isactive={isLangMenuOpen}
+                onClick={toggleLangMenu}
+              >
+                code
+              </button>
+              <ul
+                className="container select-list"
+                onClick={updateCodeLanguage}
+              >
+                <li tabIndex={0}>HTML</li>
+                <li tabIndex={0}>CSS</li>
+                <li tabIndex={0}>JavaScript</li>
+              </ul>
+            </div>
+
+            {shape.props.isEditing && (
+              <button className="material-symbols-rounded" onClick={onBlur}>
+                edit_off
+              </button>
+            )}
+          </div>
         )}
       </HTMLContainer>
     );
@@ -129,7 +191,7 @@ export class CodeBlockShapeUtil extends BaseBoxShapeUtil {
 
   getDefaultProps() {
     return {
-      w: 500,
+      w: 300,
       h: 300,
       text: 'console.log("Hello World");',
       language: "javascript",

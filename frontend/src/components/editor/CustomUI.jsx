@@ -4,12 +4,14 @@ import { useEditor, track } from "@tldraw/tldraw";
 
 import "./styles.css";
 
+import AppBar from "./AppBar";
 import ExtraShapeTabs from "../extraShapeTabs/ExtraShapeTabs";
 import IconSelector from "../iconSelector/IconSelector";
 import EmojiPicker from "../emojiPicker";
 import StylePanel from "./StylePanel";
 import handleKeyboardShortcuts from "./handleKeyboardShortcuts";
 import UserPrefsMenu from "./UserPrefsMenu";
+import { duplicateShapes } from "../../libs/utils";
 
 const tools = [
   { type: "select", title: "Select - s", icon: "arrow_selector_tool" },
@@ -62,9 +64,9 @@ function CustomUI() {
   useEffect(() => {
     /** @param {KeyboardEvent} ev */
     const onKeyUp = (ev) => {
-      ev.preventDefault();
+      const isCtrl = ev.ctrlKey || ev.metaKey;
 
-      if (!ev.ctrlKey) {
+      if (!isCtrl) {
         handleKeyboardShortcuts(ev, editor, lastChoices.current);
         return;
       }
@@ -79,11 +81,14 @@ function CustomUI() {
         case "y":
           editor.redo();
           break;
+        case "d":
+          duplicateShapes(editor);
+          break;
       }
     };
 
-    document.addEventListener("keyup", onKeyUp);
-    return () => document.removeEventListener("keyup", onKeyUp);
+    document.addEventListener("keydown", onKeyUp);
+    return () => document.removeEventListener("keydown", onKeyUp);
   }, [editor]);
 
   const onToolSelect = useCallback(
@@ -101,6 +106,8 @@ function CustomUI() {
 
   return (
     <>
+      <AppBar editor={editor} />
+
       <div className="container toolbar">
         {tools.map(({ type, title, icon }, index) =>
           type !== "divider" ? (

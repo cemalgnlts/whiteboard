@@ -1,3 +1,10 @@
+/**
+ * 
+ * @param {KeyboardEvent} ev 
+ * @param {import("@tldraw/tldraw").Editor} editor 
+ * @param {Object} lastChoices 
+ * @returns 
+ */
 function handleKeyboardShortcuts(ev, editor, lastChoices) {
   const activeElTag = document.activeElement.tagName;
 
@@ -44,6 +51,11 @@ function handleKeyboardShortcuts(ev, editor, lastChoices) {
     case "Delete":
     case "Backspace":
       editor.deleteShapes(editor.selectedShapeIds);
+      break;
+    case "f":
+      editor.zoomToSelection({
+        duration: 250
+      })
       break;
   }
 }
