@@ -15,7 +15,7 @@ const Cell = memo(({ data, columnIndex, rowIndex, style }) => {
   return emoji ? (
     <div className="picker-item" style={style}>
       <button onClick={() => data(emoji.hexcode)}>
-        <img src={`/assets/openmoji/${emoji.hexcode}.svg`} />
+        <img width={30} height={36} src={`/assets/openmoji/${emoji.hexcode}.svg`} />
       </button>
       <span>{emoji.annotation}</span>
     </div>

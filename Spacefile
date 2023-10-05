@@ -1,15 +1,28 @@
 # Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
 v: 0
+app_name: "Whiteboard"
+icon: "./app-icon.png"
 micros:
   - name: frontend
-    src: ./frontend/
-    engine: react
+    src: "./frontend/"
+    engine: static
     primary: true
+    serve: "dist/"
+    public_routes:
+      - "/view/*"
+      - "/assets/*"
+      - "/favicon.ico"
+      - "/apple-touch-icon.png"
     dev: npm run dev
+    commands:
+      - npm run build
 
   - name: backend
-    src: ./backend/
+    src: "./backend/"
     engine: nodejs16
-    path: api
+    path: "/api"
+    public_routes:
+      - "/loadSnapshot/*"
+      - "/assets/*"
     run: node index.js
     dev: npm run dev

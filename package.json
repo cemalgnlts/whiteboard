@@ -1,7 +1,12 @@
 {
   "name": "whiteboard",
   "version": "1.0.0",
+  "license": "MIT",
+  "private": "true",
   "scripts": {
-    "dev": "space dev"
+    "dev": "space dev",
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && npm install",
+    "install": "npm run install:frontend && npm run install:backend"
   }
 }

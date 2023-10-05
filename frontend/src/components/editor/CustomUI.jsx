@@ -54,12 +54,14 @@ function CustomUI() {
         emoji: "1F607"
       };
     }
+  }, []);
 
+  useEffect(() => {
     editor.updateViewportScreenBounds(true);
     editor.zoomToFit();
 
     if (editor.zoomLevel > 1) editor.resetZoom();
-  }, []);
+  }, [editor]);
 
   useEffect(() => {
     /** @param {KeyboardEvent} ev */

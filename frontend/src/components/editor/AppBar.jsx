@@ -1,7 +1,8 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { duplicateShapes } from "../../libs/utils";
-import { getIncrementedName } from "@tldraw/tldraw";
+import { getIncrementedName, uniqueId } from "@tldraw/tldraw";
+import { useNavigate } from "react-router-dom";
 
 /**
  *
@@ -9,13 +10,14 @@ import { getIncrementedName } from "@tldraw/tldraw";
  * @param {import("@tldraw/tldraw").Editor} param0.editor
  * @returns
  */
-function AppBar({ editor }) {
+function AppBar({ editor, isViewOnly }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedShapes, setSelectedShapes] = useState(editor.selectedShapeIds);
   const [{ canUndo, canRedo }, setHistoryState] = useState({
     canUndo: editor.canUndo,
     canRedo: editor.canRedo
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onHistoryChange = () => {
@@ -40,7 +42,7 @@ function AppBar({ editor }) {
     ev.stopPropagation();
     const pageNames = editor.pages.map((page) => page.name);
     const name = getIncrementedName("Page", [...pageNames, "Page"]);
-    const id = `page:${name}`;
+    const id = `page:${uniqueId()}`;
 
     editor.createPage({ name, id });
 
@@ -51,18 +53,27 @@ function AppBar({ editor }) {
     const id = ev.target.dataset.id;
     editor.setCurrentPage(id);
     setIsMenuOpen(false);
+
+    editor.updateViewportScreenBounds(true);
+    editor.zoomToFit();
+
+    if (editor.zoomLevel > 1) editor.resetZoom();
   };
 
   const openPageMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const returnBack = () => navigate("/");
+
   return (
     <header className="appBar">
-      <button className="material-symbols-rounded">arrow_back</button>
-      
+      <button className="material-symbols-rounded" onClick={returnBack}>
+        arrow_back
+      </button>
+
       <div className="tlui-toolbar__divider"></div>
-      
+
       <div className="select">
         <button
           className="page-button"
@@ -80,6 +91,7 @@ function AppBar({ editor }) {
           </li>
           {editor.pages.map((page) => (
             <li
+              key={page.id}
               tabIndex={0}
               data-id={page.id}
               data-isactive={page.id === editor.currentPageId}
@@ -89,7 +101,9 @@ function AppBar({ editor }) {
           ))}
         </ul>
       </div>
+
       <div className="tlui-toolbar__divider"></div>
+      
       <button
         className="material-symbols-rounded"
         onClick={undo}

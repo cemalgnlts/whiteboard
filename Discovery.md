@@ -1,6 +1,9 @@
-# Whiteboard
-
-[🚀 Install on Space](https://deta.space/discovery/@cemalgnlts/whiteboard)
+---
+title: "Whiteboard"
+tagline: "Whiteboard is a drawing application."
+theme_color: "#3F51B5"
+git: "https://github.com/cemalgnlts/owlser"
+---
 
 # About the App
 

@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Editor from "./components/editor/Editor";
 import ProjectManager from "./components/projectManager";
+import CanvasView from "./components/canvasView";
 
 import hljs from "./assets/highlightjs/highlight.js";
 import javascript from "./assets/highlightjs/javascript.js";
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/edit/:id",
     element: <Editor />
+  },
+  {
+    path: "/view/:id",
+    element: <CanvasView />
   }
 ]);
 
