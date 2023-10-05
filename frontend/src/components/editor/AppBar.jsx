@@ -47,13 +47,18 @@ function AppBar({ editor, isViewOnly }) {
     editor.createPage({ name, id });
 
     editor.setCurrentPage(id);
+    setIsMenuOpen(false);
+    fitToScreen();
   };
 
   const changePage = (ev) => {
     const id = ev.target.dataset.id;
     editor.setCurrentPage(id);
     setIsMenuOpen(false);
+    fitToScreen();
+  };
 
+  const fitToScreen = () => {
     editor.updateViewportScreenBounds(true);
     editor.zoomToFit();
 
@@ -103,7 +108,7 @@ function AppBar({ editor, isViewOnly }) {
       </div>
 
       <div className="tlui-toolbar__divider"></div>
-      
+
       <button
         className="material-symbols-rounded"
         onClick={undo}

@@ -13,9 +13,19 @@ import {
 import { customShapeUtils, customTools } from "../../shapes";
 
 import ViewUI from "./ViewUI";
+import { usePreloadAssets } from "../../hooks/usePreloadAssets";
 
 const shapeUtils = [...defaultShapeUtils, ...customShapeUtils];
 const tools = [...defaultTools, ...customTools];
+
+const assetUrls = {
+  fonts: {
+    draw: `/assets/fonts/Shantell_Sans-Normal-SemiBold.woff2`,
+    serif: `/assets/fonts/IBMPlexSerif-Medium.woff2`,
+    sansSerif: `/assets/fonts/IBMPlexSans-Medium.woff2`,
+    monospace: `/assets/fonts/IBMPlexMono-Medium.woff2`
+  }
+};
 
 function CanvasView() {
   const { id: projectId } = useParams();
@@ -26,6 +36,7 @@ function CanvasView() {
     error: false,
     message: ""
   });
+  usePreloadAssets(assetUrls);
 
   useLayoutEffect(() => {
     const loadSnapshot = async () => {

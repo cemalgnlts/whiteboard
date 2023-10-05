@@ -79,14 +79,14 @@ function ProjectManager() {
           </figcaption>
         </figure>
 
-        {projects.map((project) => (
+        {projects.map((project, idx) => (
           <div
             className="project-showcase"
             key={project.key}
             data-key={project.key}
             onClick={openProject}
           >
-            <img src="https://picsum.photos/250/150" alt="" draggable="false" />
+            <img src={`https://picsum.photos/250/150?${idx}`} alt="Random cover image" draggable="false" />
             <div className="project-showcase__info">
               <p className="project-showcase__title">{project.name}</p>
             </div>
